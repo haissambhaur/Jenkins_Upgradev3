@@ -67,11 +67,40 @@ String getBuildVersion() {
 }
 
 void auditTools() {
-    sh '''
-        git version
+sh '''
+    # Check and install Git
+    if ! command -v git &> /dev/null
+    then
+        echo "Git is not installed. Installing Git..."
+        sudo apt-get update
+        sudo apt-get install -y git
+    else
+        echo "Git is already installed."
+        git --version
+    fi
+
+    # Check and install Java
+    if ! command -v java &> /dev/null
+    then
+        echo "Java is not installed. Installing Java..."
+        sudo apt-get update
+        sudo apt-get install -y default-jdk
+    else
+        echo "Java is already installed."
         java -version
+    fi
+
+    # Check and install Maven
+    if ! command -v mvn &> /dev/null
+    then
+        echo "Maven is not installed. Installing Maven..."
+        sudo apt-get update
+        sudo apt-get install -y maven
+    else
+        echo "Maven is already installed."
         mvn -version
-    '''
+    fi
+'''
 }
 
 void packageApplication() {
